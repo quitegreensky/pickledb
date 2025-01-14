@@ -37,7 +37,7 @@ class PickleDB:
     get, save, remove, purge, and all.
     """
 
-    def __init__(self, location):
+    def __init__(self, location, verbose=False):
         """
         Initialize the pkldb object.
 
@@ -45,6 +45,7 @@ class PickleDB:
             location (str): Path to the JSON file.
         """
         self.location = os.path.expanduser(location)
+        self._verbose = verbose
         self._load()
 
     def _load(self):
@@ -57,7 +58,8 @@ class PickleDB:
             try:
                 with open(self.location, 'rb') as f:
                     self.db = orjson.loads(f.read())
-                    print("Database loaded")
+                    if self._verbose:
+                        print("Database loaded")
             except Exception as e:
                 self.db = {}
                 print(f"Failed to load database: {e}")
@@ -163,4 +165,3 @@ class PickleDB:
             list: A list of all keys.
         """
         return list(self.db.keys())
-
